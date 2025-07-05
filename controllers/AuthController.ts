@@ -7,6 +7,7 @@ import {
 } from "../utils/auth";
 import { z } from "zod";
 import { User } from "../models/userModel";
+import { verifyGoogleToken } from "../utils/googleAuth";
 
 const registerSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -121,25 +122,46 @@ export const login: RequestHandler = async (req, res) => {
 
 export const googleAuthCallback: RequestHandler = async (req, res) => {
   try {
-    const { googleId, email, name } = req.body;
+    const { token } = req.body;
 
-    let user: any = await User.findOne({ where: { google_id: googleId } });
-
-    if (!user) {
-      const existingUser = await User.findOne({ where: { email } });
-      if (existingUser) {
-        await existingUser.update({ google_id: googleId });
-        user = existingUser;
-      } else {
-        user = await User.create({
-          name,
-          email,
-          google_id: googleId,
-        });
-      }
+    if (!token) {
+      return res.status(400).json({ error: "Google token is required" });
     }
 
-    const token = generateToken({
+    // Verify the Google token
+    const googleProfile = await verifyGoogleToken(token);
+    
+    if (!googleProfile.verified) {
+      return res.status(400).json({ error: "Email not verified with Google" });
+    }
+
+    let user: any = await User.findOne({ 
+      where: { 
+        email: googleProfile.email 
+      } 
+    });
+
+    if (user) {
+      // Update existing user with Google ID if not set
+      if (!user.google_id) {
+        await user.update({ 
+          google_id: googleProfile.googleId,
+          updated_at: new Date()
+        });
+      }
+    } else {
+      // Create new user
+      user = await User.create({
+        name: googleProfile.name,
+        email: googleProfile.email,
+        google_id: googleProfile.googleId,
+        role: "user",
+        created_at: new Date(),
+        updated_at: new Date(),
+      });
+    }
+
+    const jwtToken = generateToken({
       id: user.id,
       email: user.email,
       role: user.role,
@@ -152,12 +174,20 @@ export const googleAuthCallback: RequestHandler = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
+        mobileNumber: user.mobile_number,
+        gender: user.gender,
+        address: user.address,
+        city: user.city,
+        state: user.state,
+        country: user.country,
+        postalCode: user.postal_code,
+        createdAt: user.created_at,
       },
-      token,
+      token: jwtToken,
     });
   } catch (error) {
     console.error("Google auth error:", error);
-    res.status(500).json({ error});
+    res.status(500).json({ error: "Google authentication failed" });
   }
 };
 

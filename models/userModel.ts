@@ -20,6 +20,7 @@ export const User = sequelize.define(
     },
     password: {
       type: DataTypes.STRING,
+      allowNull: true, // Allow null for Google OAuth users
     },
     mobile_number: {
       type: DataTypes.STRING,
@@ -33,6 +34,8 @@ export const User = sequelize.define(
     },
     google_id: {
       type: DataTypes.STRING,
+      unique: true,
+      allowNull: true,
     },
     address: {
       type: DataTypes.TEXT,
