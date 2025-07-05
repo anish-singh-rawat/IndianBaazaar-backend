@@ -38,32 +38,7 @@ export const getUserNotifications: RequestHandler = async (
     res.json({ notifications: formattedNotifications });
   } catch (error) {
     console.error("Get notifications error:", error);
-
-    // Fallback mock data when database is unavailable
-    const mockNotifications = [
-      {
-        id: "1",
-        title: "Welcome to IndianBaazaar!",
-        message:
-          "Thank you for joining us. Explore our amazing products and deals.",
-        type: "welcome",
-        isRead: false,
-        metadata: null,
-        createdAt: new Date().toISOString(),
-      },
-      {
-        id: "2",
-        title: "New Product Alert",
-        message:
-          "Check out our latest electronic gadgets with special discounts!",
-        type: "product_added",
-        isRead: false,
-        metadata: { productId: "P1A2B3C4D5E6F7G8H9I0" },
-        createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-      },
-    ];
-
-    res.json({ notifications: mockNotifications });
+    res.json({ error });
   }
 };
 
@@ -92,18 +67,11 @@ export const markNotificationAsRead: RequestHandler = async (
     res.status(200).json({ message: "Notification marked as read" });
   } catch (error) {
     console.error("Mark notification as read error:", error);
-
-    // Fallback response when database is unavailable
-    res
-      .status(200)
-      .json({ message: "Notification marked as read (mock mode)" });
+    res.status(500).json({ error});
   }
 };
 
-export const createNotification: RequestHandler = async (
-  req: AuthRequest,
-  res,
-) => {
+export const createNotification: RequestHandler = async (req: AuthRequest,res) => {
   try {
     const validatedData = notificationSchema.parse(req.body);
     const { title, message, type, userId } = validatedData;
@@ -137,7 +105,7 @@ export const createNotification: RequestHandler = async (
     if (error instanceof z.ZodError) {
       return res.status(400).json({ error: error.errors[0].message });
     }
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error });
   }
 };
 
@@ -157,7 +125,7 @@ export const deleteNotification: RequestHandler = async (
     res.json({ message: "Notification deleted successfully" });
   } catch (error) {
     console.error("Delete notification error:", error);
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error});
   }
 };
 

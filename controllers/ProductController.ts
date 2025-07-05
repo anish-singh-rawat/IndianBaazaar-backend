@@ -39,88 +39,6 @@ const productSchema = z.object({
   faqs: z.array(faqSchema).optional().default([]),
 });
 
-// Fallback sample data for when database is unavailable
-const sampleProducts = [
-  {
-    id: "P1A2B3C4D5E6F7G8H9I0",
-    name: "Premium Wireless Headphones",
-    description:
-      "High-quality wireless headphones with noise cancellation and superior sound quality.",
-    images: ["/api/placeholder/400/300"],
-    mrp: 299.99,
-    our_price: 249.99,
-    discount: 17,
-    rating: 4.5,
-    afterExchangePrice: 199.99,
-    offers: ["Free shipping", "1 year warranty"],
-    coupons: ["SAVE20", "NEWYEAR"],
-    company: "AudioTech",
-    color: "Black",
-    size: "One Size",
-    weight: "350g",
-    height: "20cm",
-    category: "electronics",
-    in_stock: true,
-    stockQuantity: 50,
-    reviews: [],
-    faqs: [],
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    id: "Q2B3C4D5E6F7G8H9I0J1",
-    name: "Smart Fitness Watch",
-    description:
-      "Advanced fitness tracking with heart rate monitor, GPS, and smartphone connectivity.",
-    images: ["/api/placeholder/400/300"],
-    mrp: 199.99,
-    our_price: 159.99,
-    discount: 20,
-    rating: 4.3,
-    afterExchangePrice: 129.99,
-    offers: ["Free shipping", "30-day trial"],
-    coupons: ["FITNESS15"],
-    company: "WearTech",
-    color: "Silver",
-    size: "42mm",
-    weight: "45g",
-    height: "1.2cm",
-    category: "electronics",
-    in_stock: true,
-    stockQuantity: 75,
-    reviews: [],
-    faqs: [],
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    id: "R3C4D5E6F7G8H9I0J1K2",
-    name: "Organic Cotton T-Shirt",
-    description:
-      "Comfortable and sustainable organic cotton t-shirt in various colors.",
-    images: ["/api/placeholder/400/300"],
-    mrp: 29.99,
-    our_price: 24.99,
-    discount: 17,
-    rating: 4.7,
-    afterExchangePrice: 19.99,
-    offers: ["Buy 2 get 1 free"],
-    coupons: ["ORGANIC10"],
-    company: "EcoWear",
-    color: "Blue",
-    size: "M",
-    weight: "200g",
-    height: "70cm",
-    category: "clothes",
-    in_stock: true,
-    stockQuantity: 100,
-    reviews: [],
-    faqs: [],
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-];
-
 export const getAllProducts: RequestHandler = async (req, res) => {
   // Extract query parameters outside try-catch to access in catch block
   const { category, search, in_stock } = req.query;
@@ -141,33 +59,7 @@ export const getAllProducts: RequestHandler = async (req, res) => {
     res.json({ products });
   } catch (error) {
     console.error("getAllProducts error:", error);
-    console.log("Database unavailable, using fallback sample data");
-
-    // Filter sample products based on query parameters
-    let filteredProducts = [...sampleProducts];
-
-    if (category && category !== "all") {
-      filteredProducts = filteredProducts.filter(
-        (product) => product.category === category,
-      );
-    }
-
-    if (search) {
-      const searchLower = search.toString().toLowerCase();
-      filteredProducts = filteredProducts.filter(
-        (product) =>
-          product.name.toLowerCase().includes(searchLower) ||
-          product.description.toLowerCase().includes(searchLower),
-      );
-    }
-
-    if (in_stock === "true") {
-      filteredProducts = filteredProducts.filter(
-        (product: any) => product.in_stock,
-      );
-    }
-
-    res.json({ products: filteredProducts });
+    res.json({ error });
   }
 };
 
@@ -178,16 +70,7 @@ export const getProductById: RequestHandler = async (req, res) => {
     if (!product) return res.status(404).json({ error: "Product not found" });
     res.json({ product });
   } catch (error) {
-    console.error("getProductById error:", error);
-    console.log("Database unavailable, using fallback sample data");
-
-    // Find product in sample data
-    const product = sampleProducts.find((p) => p.id === req.params.id);
-    if (!product) {
-      return res.status(404).json({ error: "Product not found" });
-    }
-
-    res.json({ product });
+    res.json({ error });
   }
 };
 
@@ -213,9 +96,7 @@ export const createProduct: RequestHandler = async (req: AuthRequest, res) => {
     res.status(201).json({ message: "Product created", product });
   } catch (error) {
     console.error("createProduct error:", error);
-    if (error instanceof z.ZodError)
-      return res.status(400).json({ error: error.errors[0].message });
-    res.status(503).json({ error: "Could not create product" });
+    res.status(503).json({ error});
   }
 };
 
@@ -238,9 +119,7 @@ export const updateProduct: RequestHandler = async (req, res) => {
     res.json({ message: "Product updated", product });
   } catch (error) {
     console.error("updateProduct error:", error);
-    if (error instanceof z.ZodError)
-      return res.status(400).json({ error: error.errors[0].message });
-    res.status(503).json({ error: "Could not update product" });
+    res.status(503).json({ error});
   }
 };
 
@@ -252,7 +131,7 @@ export const deleteProduct: RequestHandler = async (req, res) => {
     res.json({ message: "Product deleted" });
   } catch (error) {
     console.error("deleteProduct error:", error);
-    res.status(503).json({ error: "Could not delete product" });
+    res.status(503).json({ error });
   }
 };
 
@@ -270,22 +149,7 @@ export const getProductsByCategory: RequestHandler = async (req, res) => {
     res.json({ products });
   } catch (error) {
     console.error("getProductsByCategory error:", error);
-    console.log("Database unavailable, using fallback sample data");
-
-    // Filter sample products by category
-    const { category } = req.params;
-    const { in_stock } = req.query;
-    let filteredProducts = sampleProducts.filter(
-      (product) => product.category === category,
-    );
-
-    if (in_stock === "true") {
-      filteredProducts = filteredProducts.filter(
-        (product: any) => product.in_stock,
-      );
-    }
-
-    res.json({ products: filteredProducts });
+    res.json({ error });
   }
 };
 
@@ -316,29 +180,7 @@ export const getSearchSuggestions: RequestHandler = async (req, res) => {
     res.json({ suggestions });
   } catch (error) {
     console.error("getSearchSuggestions error:", error);
-    console.log("Database unavailable, using fallback sample data");
 
-    const { q } = req.query;
-    if (!q || typeof q !== "string" || q.trim().length < 2) {
-      return res.json({ suggestions: [] });
-    }
-
-    const term = q.trim().toLowerCase();
-    const filteredProducts = sampleProducts
-      .filter(
-        (product: any) =>
-          product.name.toLowerCase().includes(term) && product.in_stock,
-      )
-      .slice(0, 10);
-
-    const suggestions = filteredProducts.map((p) => ({
-      id: p.id,
-      name: p.name,
-      image: p.images?.[0] || "/placeholder.svg",
-      category: p.category,
-      price: p.our_price,
-    }));
-
-    res.json({ suggestions });
+    res.json({ error });
   }
 };

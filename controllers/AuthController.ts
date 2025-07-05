@@ -21,6 +21,18 @@ const loginSchema = z.object({
   password: z.string().min(1, "Password is required"),
 });
 
+const updateProfileSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters").optional(),
+  mobileNumber: z.string().optional(),
+  gender: z.enum(["male", "female", "other"]).optional(),
+  address: z.string().optional(),
+  city: z.string().optional(),
+  state: z.string().optional(),
+  country: z.string().optional(),
+  postalCode: z.string().optional(),
+});
+
+
 export const register: RequestHandler = async (req, res) => {
   try {
     const validatedData = registerSchema.parse(req.body);
@@ -62,7 +74,7 @@ export const register: RequestHandler = async (req, res) => {
     if (error instanceof z.ZodError) {
       return res.status(400).json({ error: error.errors[0].message });
     }
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error });
   }
 };
 
@@ -103,7 +115,7 @@ export const login: RequestHandler = async (req, res) => {
     if (error instanceof z.ZodError) {
       return res.status(400).json({ error: error.errors[0].message });
     }
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error });
   }
 };
 
@@ -145,7 +157,7 @@ export const googleAuthCallback: RequestHandler = async (req, res) => {
     });
   } catch (error) {
     console.error("Google auth error:", error);
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error});
   }
 };
 
@@ -179,31 +191,10 @@ export const getProfile: RequestHandler = async (req: AuthRequest, res) => {
   } catch (error) {
     console.error("Profile error:", error);
 
-    // Fallback mock data when database is unavailable
-    const mockUser = {
-      id: req.user.id,
-      name: "Demo User",
-      email: req.user.email,
-      role: req.user.role,
-      mobileNumber: "+91 9876543210",
-      gender: "male",
-      createdAt: new Date().toISOString(),
-    };
-
-    res.json({ user: mockUser });
+    res.json({ error });
   }
 };
 
-const updateProfileSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters").optional(),
-  mobileNumber: z.string().optional(),
-  gender: z.enum(["male", "female", "other"]).optional(),
-  address: z.string().optional(),
-  city: z.string().optional(),
-  state: z.string().optional(),
-  country: z.string().optional(),
-  postalCode: z.string().optional(),
-});
 
 export const updateProfile: RequestHandler = async (req: AuthRequest, res) => {
   try {
@@ -262,6 +253,6 @@ export const updateProfile: RequestHandler = async (req: AuthRequest, res) => {
     if (error instanceof z.ZodError) {
       return res.status(400).json({ error: error.errors[0].message });
     }
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error });
   }
 };

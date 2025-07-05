@@ -51,6 +51,10 @@ export const createOrder: RequestHandler = async (req: AuthRequest, res) => {
       receipt: `order_${Date.now()}`,
     });
 
+    if(!req.user){
+      return res.status(403).json({ error: "please provide user and it's id" });
+    }
+
     const newOrder: any = await Order.create({
       user_id: req.user.id,
       total_amount: amount,
@@ -85,9 +89,7 @@ export const createOrder: RequestHandler = async (req: AuthRequest, res) => {
     });
   } catch (error) {
     console.error("Create order error:", error);
-    res.status(503).json({
-      error: "Database not available. Order creation is currently unavailable.",
-    });
+    res.status(503).json({ error });
   }
 };
 
@@ -100,6 +102,9 @@ export const verifyPayment: RequestHandler = async (req: AuthRequest, res) => {
       orderId,
     } = verifyPaymentSchema.parse(req.body);
 
+    if (!process.env.RAZORPAY_KEY_SECRET) {
+      return res.status(500).json({ error: "Razorpay key secret is not configured" });
+    }
     const expectedSignature = crypto
       .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
       .update(`${razorpay_order_id}|${razorpay_payment_id}`)
@@ -107,6 +112,10 @@ export const verifyPayment: RequestHandler = async (req: AuthRequest, res) => {
 
     if (expectedSignature !== razorpay_signature) {
       return res.status(400).json({ error: "Invalid payment signature" });
+    }
+
+     if(!req.user){
+      return res.status(403).json({ error: "please provide user and it's id" });
     }
 
     await Order.update(
@@ -126,11 +135,8 @@ export const verifyPayment: RequestHandler = async (req: AuthRequest, res) => {
     });
   } catch (error) {
     console.error("Verify payment error:", error);
-    res.status(503).json({
-      error:
-        "Database not available. Payment verification is currently unavailable.",
-    });
-  }
+    res.status(503).json({ error });
+    }
 };
 
 export const getOrders: RequestHandler = async (req: AuthRequest, res) => {
@@ -181,40 +187,7 @@ export const getOrders: RequestHandler = async (req: AuthRequest, res) => {
     res.json({ orders: formattedOrders });
   } catch (error) {
     console.error("Get orders error:", error);
-
-    // Fallback mock data when database is unavailable
-    const mockOrders = [
-      {
-        id: "ORD001",
-        totalAmount: 2999,
-        status: "delivered",
-        paymentStatus: "completed",
-        paymentId: "pay_123456789",
-        shippingAddress: {
-          street: "123 Main St",
-          city: "Mumbai",
-          state: "Maharashtra",
-          pincode: "400001",
-          country: "India",
-        },
-        createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
-        updatedAt: new Date().toISOString(),
-        items: [
-          {
-            id: "1",
-            productId: "P1A2B3C4D5E6F7G8H9I0",
-            quantity: 1,
-            price: 2999,
-            selectedSize: "One Size",
-            selectedColor: "Black",
-            productName: "Premium Wireless Headphones",
-            productImage: "/api/placeholder/400/300",
-          },
-        ],
-      },
-    ];
-
-    res.json({ orders: mockOrders });
+    res.json({ error });
   }
 };
 
@@ -272,6 +245,6 @@ export const getOrderById: RequestHandler = async (req: AuthRequest, res) => {
     res.json({ order: formattedOrder });
   } catch (error) {
     console.error("Get order error:", error);
-    res.status(404).json({ error: "Order not found" });
+    res.status(500).json({ error });
   }
 };
