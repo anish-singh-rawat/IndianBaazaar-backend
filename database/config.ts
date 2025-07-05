@@ -10,6 +10,9 @@ export const pool = new Pool({
   database: process.env.DB_NAME || "postgres",
   password: process.env.DB_PASSWORD || "postgres",
   port: parseInt(process.env.DB_PORT || "5432"),
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
 
 // Initialize database tables
@@ -30,17 +33,23 @@ export const sequelize = new Sequelize(
     },
     logging: false,
     timezone: "+00:00",
+    dialectOptions: {
+      ssl: {
+        require: true, // Ensure SSL is used with Aiven PostgreSQL
+        rejectUnauthorized: false, // Adjust based on your security requirements
+      },
+    },
   },
 );
 
 export const connectToPgSqlDB = async () => {
-  pool.connect((err, client, release) => {
+  pool.connect((err, client : any, release) => {
     if (err) {
       console.error("Connection error: hai ", err);
       return;
     }
 
-    client.query("SELECT NOW()", (err, result) => {
+    client.query("SELECT NOW()", (err : any, result : any) => {
       release();
       if (err) {
         return console.error("Error executing query:", err);
