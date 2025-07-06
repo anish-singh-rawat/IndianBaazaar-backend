@@ -53,7 +53,42 @@ dotenv.config();
 export function createServer() {
   const app = express();
 
-  app.use(cors());
+  // Enhanced CORS configuration
+  const corsOptions = {
+    origin: [
+      "http://localhost:5173", // Vite dev server
+      "http://localhost:3000", // Backend server
+      "http://localhost:4173", // Vite preview
+      "https://localhost:5173",
+      "https://localhost:3000",
+      "https://localhost:4173",
+      "https://indianbaazaar-backend.onrender.com/api", 
+      "https://indianbaazaar-frontend.onrender.com",
+      "https://www.indianbaazaar.com/api",
+      "https://indianbaazaar.com",
+      "https://indianbaazaar.com/api",
+      "https://www.indianbaazaar.com"
+    ],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: [
+      "Origin",
+      "X-Requested-With",
+      "Content-Type",
+      "Accept",
+      "Authorization",
+      "Cache-Control",
+      "Pragma",
+    ],
+    exposedHeaders: ["Authorization"],
+    maxAge: 86400, // 24 hours
+  };
+
+  app.use(cors(corsOptions));
+
+  // Handle preflight requests
+  app.options("*", cors(corsOptions));
+
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
