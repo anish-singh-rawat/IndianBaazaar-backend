@@ -59,7 +59,7 @@ export const getAllProducts: RequestHandler = async (req, res) => {
     res.json({ products });
   } catch (error) {
     console.error("getAllProducts error:", error);
-    res.json({ error });
+    res.status(500).json({ error });
   }
 };
 
@@ -70,7 +70,8 @@ export const getProductById: RequestHandler = async (req, res) => {
     if (!product) return res.status(404).json({ error: "Product not found" });
     res.json({ product });
   } catch (error) {
-    res.json({ error });
+    console.error("getProductById error:", error);
+    res.status(500).json({ error });
   }
 };
 
@@ -96,7 +97,7 @@ export const createProduct: RequestHandler = async (req: AuthRequest, res) => {
     res.status(201).json({ message: "Product created", product });
   } catch (error) {
     console.error("createProduct error:", error);
-    res.status(503).json({ error});
+    res.status(400).json({ error });
   }
 };
 
@@ -119,7 +120,7 @@ export const updateProduct: RequestHandler = async (req, res) => {
     res.json({ message: "Product updated", product });
   } catch (error) {
     console.error("updateProduct error:", error);
-    res.status(503).json({ error});
+    res.status(400).json({ error });
   }
 };
 
@@ -131,7 +132,7 @@ export const deleteProduct: RequestHandler = async (req, res) => {
     res.json({ message: "Product deleted" });
   } catch (error) {
     console.error("deleteProduct error:", error);
-    res.status(503).json({ error });
+    res.status(500).json({ error });
   }
 };
 
@@ -149,7 +150,7 @@ export const getProductsByCategory: RequestHandler = async (req, res) => {
     res.json({ products });
   } catch (error) {
     console.error("getProductsByCategory error:", error);
-    res.json({ error });
+    res.status(500).json({ error });
   }
 };
 
@@ -180,7 +181,6 @@ export const getSearchSuggestions: RequestHandler = async (req, res) => {
     res.json({ suggestions });
   } catch (error) {
     console.error("getSearchSuggestions error:", error);
-
-    res.json({ error });
+    res.status(500).json({ error});
   }
 };
