@@ -47,6 +47,7 @@ import {
   createReview,
   getProductReviews,
 } from "./controllers/ReviewController";
+import UploadFileRouter from "Routes/upload-image";
 
 dotenv.config();
 
@@ -209,6 +210,8 @@ export function createServer() {
 
   app.post("/api/reviews", authenticateToken, createReview);
   app.get("/api/products/:productId/reviews", getProductReviews);
+  app.use('/api/file', UploadFileRouter)
+
 
   return app;
 }

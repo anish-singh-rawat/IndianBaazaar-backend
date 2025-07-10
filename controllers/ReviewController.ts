@@ -17,6 +17,10 @@ export const createReview: RequestHandler = async (req: AuthRequest, res) => {
   try {
     const { productId, rating, comment } = reviewSchema.parse(req.body);
 
+    if(!req.user){
+      return res.status(401).json({ error: "Unauthorized. Please log in." });
+    }
+    
     const order = await Order.findOne({
       where: {
         user_id: req.user.id,
