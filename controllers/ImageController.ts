@@ -39,6 +39,6 @@ export const uploadImage = async (req: any, res: any) => {
 
   } catch (error) {
     console.error('Error uploading image:', error);
-    return res.status(500).json({ message: 'Internal server error' });
+    return res.status(500).json({ message: 'Internal server error', error });
   }
 };
