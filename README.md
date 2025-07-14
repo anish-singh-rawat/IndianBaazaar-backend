@@ -160,9 +160,6 @@ The application uses PostgreSQL with Sequelize ORM. Key relationships:
 
 ## Development
 
-### Without Database
-The application can run without PostgreSQL installed. It will automatically fall back to mock data mode for development.
-
 ### With Database
 For full functionality, set up PostgreSQL and update the `.env` file with your database credentials.
 

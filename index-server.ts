@@ -96,7 +96,6 @@ export function createServer() {
   connectToPgSqlDB().catch((error) => {
     console.error("Database connection failed:", error.message);
     console.log("⚠️  Running in development mode without database");
-    console.log("📊 Using mock data for API responses");
   });
 
   // Define associations after all models are loaded
@@ -132,7 +131,6 @@ export function createServer() {
     })
     .catch((err) => {
       console.error("❌ Unable to sync tables:", err.message);
-      console.log("🔄 API will use mock data fallbacks");
     });
 
   // Health check endpoint
