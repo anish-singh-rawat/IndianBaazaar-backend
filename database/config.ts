@@ -5,24 +5,22 @@ import { Sequelize } from "sequelize";
 dotenv.config();
 
 export const pool = new Pool({
-  user: process.env.DB_USER || "postgres",
-  host: process.env.DB_HOST || "localhost",
-  database: process.env.DB_NAME || "postgres",
-  password: process.env.DB_PASSWORD || "postgres",
-  port: parseInt(process.env.DB_PORT || "5432"),
+  user: process.env.DB_USER || "",
+  host: process.env.DB_HOST || "",
+  database: process.env.DB_NAME || "",
+  password: process.env.DB_PASSWORD || "",
+  port: Number(process.env.DB_PORT) || 5432,
   ssl: {
     rejectUnauthorized: false,
   },
 });
 
-// Initialize database tables
-
 export const sequelize = new Sequelize(
-  process.env.DB_NAME || "postgres",
-  process.env.DB_USER || "postgres",
-  process.env.DB_PASSWORD || "postgres",
+  process.env.DB_NAME || "",
+  process.env.DB_USER || "",
+  process.env.DB_PASSWORD || "",
   {
-    host: process.env.DB_HOST || "localhost",
+    host: process.env.DB_HOST || "",
     port: Number(process.env.DB_PORT) || 5432,
     dialect: "postgres",
     pool: {
@@ -35,8 +33,8 @@ export const sequelize = new Sequelize(
     timezone: "+00:00",
     dialectOptions: {
       ssl: {
-        require: true, // Ensure SSL is used with Aiven PostgreSQL
-        rejectUnauthorized: false, // Adjust based on your security requirements
+        require: true,
+        rejectUnauthorized: false,
       },
     },
   },
