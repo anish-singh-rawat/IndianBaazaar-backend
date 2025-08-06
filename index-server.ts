@@ -1,21 +1,21 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import { connectToPgSqlDB, sequelize } from "./database/config";
-import { authenticateToken, requireAdmin } from "./utils/auth";
-import { Order } from "./models/orderModel";
-import { OrderItem } from "./models/OrderdItem";
-import { Product } from "./models/productModel";
-import { Review } from "./models/reviewModel";
-import { User } from "./models/userModel";
-import { Notification } from "./models/notificationModel";
+import { connectToPgSqlDB, sequelize } from "./database/config.ts";
+import { authenticateToken, requireAdmin } from "./utils/auth.ts";
+import { Order } from "./models/orderModel.ts";
+import { OrderItem } from "./models/OrderdItem.ts";
+import { Product } from "./models/productModel.ts";
+import { Review } from "./models/reviewModel.ts";
+import { User } from "./models/userModel.ts";
+import { Notification } from "./models/notificationModel.ts";
 import {
   getProfile,
   googleAuthCallback,
   login,
   register,
   updateProfile,
-} from "./controllers/AuthController";
+} from "./controllers/AuthController.ts";
 import {
   createProduct,
   deleteProduct,
@@ -24,30 +24,30 @@ import {
   getProductsByCategory,
   getSearchSuggestions,
   updateProduct,
-} from "./controllers/ProductController";
+} from "./controllers/ProductController.ts";
 import {
   createNotification,
   deleteNotification,
   getUserNotifications,
   markNotificationAsRead,
-} from "./controllers/NotificationController";
+} from "./controllers/NotificationController.ts";
 import {
   createOrder,
   getOrderById,
   getOrders,
   verifyPayment,
-} from "./controllers/OrderController";
+} from "./controllers/OrderController.ts";
 import {
   getAllCustomers,
   getAllOrders,
   getDashboardStats,
   updateOrderStatus,
-} from "./controllers/AdminController";
+} from "./controllers/AdminController.ts";
 import {
   createReview,
   getProductReviews,
-} from "./controllers/ReviewController";
-import UploadFileRouter from "Routes/upload-image";
+} from "./controllers/ReviewController.ts";
+import UploadFileRouter from "Routes/upload-image.ts";
 
 dotenv.config();
 

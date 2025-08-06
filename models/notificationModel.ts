@@ -1,6 +1,6 @@
-import { DataTypes, Sequelize } from "sequelize";
-import { sequelize } from "../database/config";
-import { User } from "./userModel";
+import { DataTypes } from "sequelize";
+import { sequelize } from "../database/config.ts";
+import { User } from "./userModel.ts";
 
 export const Notification = sequelize.define(
   "Notification",

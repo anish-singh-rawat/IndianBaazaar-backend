@@ -1,6 +1,6 @@
 import { DataTypes, Sequelize } from "sequelize";
-import { sequelize } from "../database/config";
-import { User } from "./userModel";
+import { sequelize } from "../database/config.ts";
+import { User } from "./userModel.ts";
 
 export const Order = sequelize.define(
   "Order",

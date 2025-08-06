@@ -2,10 +2,10 @@ import { RequestHandler } from "express";
 import { z } from "zod";
 import Razorpay from "razorpay";
 import crypto from "crypto";
-import { AuthRequest } from "../utils/auth";
-import { Order } from "../models/orderModel";
-import { Product } from "../models/productModel";
-import { OrderItem } from "../models/OrderdItem";
+import { AuthRequest } from "../utils/auth.ts";
+import { Order } from "../models/orderModel.ts";
+import { Product } from "../models/productModel.ts";
+import { OrderItem } from "../models/OrderdItem.ts";
 
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,

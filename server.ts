@@ -1,4 +1,4 @@
-import { createServer } from "./index-server";
+import { createServer } from "./index-server.ts";
 import dotenv from "dotenv";
 
 dotenv.config();

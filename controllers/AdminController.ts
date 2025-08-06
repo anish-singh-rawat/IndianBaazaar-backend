@@ -1,10 +1,10 @@
 import { RequestHandler } from "express";
-import { AuthRequest } from "../utils/auth";
-import { User } from "../models/userModel";
-import { Order } from "../models/orderModel";
-import { Product } from "../models/productModel";
+import { AuthRequest } from "../utils/auth.ts";
+import { User } from "../models/userModel.ts";
+import { Order } from "../models/orderModel.ts";
+import { Product } from "../models/productModel.ts";
 import { Op, fn, col, literal } from "sequelize";
-import { OrderItem } from "../models/OrderdItem";
+import { OrderItem } from "../models/OrderdItem.ts";
 
 export const getAllCustomers: RequestHandler = async (
   req: AuthRequest,

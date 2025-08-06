@@ -4,10 +4,10 @@ import {
   comparePassword,
   generateToken,
   AuthRequest,
-} from "../utils/auth";
+} from "../utils/auth.ts";
 import { z } from "zod";
-import { User } from "../models/userModel";
-import { verifyGoogleToken } from "../utils/googleAuth";
+import { User } from "../models/userModel.ts";
+import { verifyGoogleToken } from "../utils/googleAuth.ts";
 
 const registerSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),

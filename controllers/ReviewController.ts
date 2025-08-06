@@ -1,11 +1,11 @@
 import { RequestHandler } from "express";
 import { z } from "zod";
-import { AuthRequest } from "../utils/auth";
-import { Review } from "../models/reviewModel";
-import { Order } from "../models/orderModel";
-import { OrderItem } from "../models/OrderdItem";
-import { User } from "../models/userModel";
-import { Product } from "../models/productModel";
+import { AuthRequest } from "../utils/auth.ts";
+import { Review } from "../models/reviewModel.ts";
+import { Order } from "../models/orderModel.ts";
+import { OrderItem } from "../models/OrderdItem.ts";
+import { User } from "../models/userModel.ts";
+import { Product } from "../models/productModel.ts";
 
 const reviewSchema = z.object({
   productId: z.string().uuid(),

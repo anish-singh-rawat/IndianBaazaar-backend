@@ -1,7 +1,7 @@
 import { Sequelize, DataTypes } from "sequelize";
-import { sequelize } from "../database/config";
-import { User } from "./userModel";
-import { Product } from "./productModel";
+import { sequelize } from "../database/config.ts";
+import { User } from "./userModel.ts";
+import { Product } from "./productModel.ts";
 
 export const Review = sequelize.define(
   "Review",
