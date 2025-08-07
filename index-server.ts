@@ -47,7 +47,7 @@ import {
   createReview,
   getProductReviews,
 } from "./controllers/ReviewController.js";
-import UploadFileRouter from "Routes/upload-image.js";
+import UploadFileRouter from "./Routes/upload-image.js";
 
 dotenv.config();
 
