@@ -11,8 +11,10 @@
     ]
   },
   "scripts": {
-    "start": "tsx server.ts",
-    "dev": "tsx node-build.ts",
+    "start": "node dist/server.js",
+    "dev": "tsx watch server.ts",
+    "prebuild": "node build.js",
+    "build": "tsc",
     "format.fix": "prettier --write .",
     "typecheck": "tsc --noEmit"
   },

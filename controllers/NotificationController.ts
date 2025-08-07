@@ -1,7 +1,7 @@
 import { RequestHandler } from "express";
 import { z } from "zod";
-import { AuthRequest } from "../utils/auth.ts";
-import { Notification } from "../models/notificationModel.ts";
+import { AuthRequest } from "../utils/auth.js";
+import { Notification } from "../models/notificationModel.js";
 import { Op } from "sequelize";
 
 const notificationSchema = z.object({

@@ -1,9 +1,9 @@
 import { RequestHandler } from "express";
 import { z } from "zod";
 import { Op } from "sequelize";
-import { AuthRequest } from "../utils/auth.ts";
-import { Product } from "../models/productModel.ts";
-import { createProductNotification } from "./NotificationController.ts";
+import { AuthRequest } from "../utils/auth.js";
+import { Product } from "../models/productModel.js";
+import { createProductNotification } from "./NotificationController.js";
 
 const faqSchema = z.object({
   id: z.string(),

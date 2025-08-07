@@ -1,21 +1,21 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import { connectToPgSqlDB, sequelize } from "./database/config.ts";
-import { authenticateToken, requireAdmin } from "./utils/auth.ts";
-import { Order } from "./models/orderModel.ts";
-import { OrderItem } from "./models/OrderdItem.ts";
-import { Product } from "./models/productModel.ts";
-import { Review } from "./models/reviewModel.ts";
-import { User } from "./models/userModel.ts";
-import { Notification } from "./models/notificationModel.ts";
+import { connectToPgSqlDB, sequelize } from "./database/config.js";
+import { authenticateToken, requireAdmin } from "./utils/auth.js";
+import { Order } from "./models/orderModel.js";
+import { OrderItem } from "./models/OrderdItem.js";
+import { Product } from "./models/productModel.js";
+import { Review } from "./models/reviewModel.js";
+import { User } from "./models/userModel.js";
+import { Notification } from "./models/notificationModel.js";
 import {
   getProfile,
   googleAuthCallback,
   login,
   register,
   updateProfile,
-} from "./controllers/AuthController.ts";
+} from "./controllers/AuthController.js";
 import {
   createProduct,
   deleteProduct,
@@ -24,30 +24,30 @@ import {
   getProductsByCategory,
   getSearchSuggestions,
   updateProduct,
-} from "./controllers/ProductController.ts";
+} from "./controllers/ProductController.js";
 import {
   createNotification,
   deleteNotification,
   getUserNotifications,
   markNotificationAsRead,
-} from "./controllers/NotificationController.ts";
+} from "./controllers/NotificationController.js";
 import {
   createOrder,
   getOrderById,
   getOrders,
   verifyPayment,
-} from "./controllers/OrderController.ts";
+} from "./controllers/OrderController.js";
 import {
   getAllCustomers,
   getAllOrders,
   getDashboardStats,
   updateOrderStatus,
-} from "./controllers/AdminController.ts";
+} from "./controllers/AdminController.js";
 import {
   createReview,
   getProductReviews,
-} from "./controllers/ReviewController.ts";
-import UploadFileRouter from "Routes/upload-image.ts";
+} from "./controllers/ReviewController.js";
+import UploadFileRouter from "Routes/upload-image.js";
 
 dotenv.config();
 
@@ -93,7 +93,7 @@ export function createServer() {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
-  connectToPgSqlDB().catch((error) => {
+  connectToPgSqlDB().catch((error : any) => {
     console.error("Database connection failed:", error.message);
     console.log("⚠️  Running in development mode without database");
   });
@@ -129,7 +129,7 @@ export function createServer() {
     .then(() => {
       console.log("✅ Database tables synced successfully");
     })
-    .catch((err) => {
+    .catch((err : any) => {
       console.error("❌ Unable to sync tables:", err.message);
     });
 
