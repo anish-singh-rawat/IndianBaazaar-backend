@@ -48,6 +48,7 @@ import {
   getProductReviews,
 } from "./controllers/ReviewController.js";
 import UploadFileRouter from "./Routes/upload-image.js";
+import { createEventSlide, getEventSlides } from "./controllers/EventsController.js";
 
 dotenv.config();
 
@@ -143,6 +144,7 @@ export function createServer() {
   });
 
   app.post("/api/auth/register", register);
+
   app.post("/api/auth/login", login);
   app.post("/api/auth/google", googleAuthCallback);
   app.get("/api/auth/profile", authenticateToken, getProfile);
@@ -205,6 +207,9 @@ export function createServer() {
     requireAdmin,
     updateOrderStatus,
   );
+  
+  app.post("/api/create-event-slides",authenticateToken, createEventSlide);
+  app.get("/api/get-event-slides", getEventSlides);
 
   app.post("/api/reviews", authenticateToken, createReview);
   app.get("/api/products/:productId/reviews", getProductReviews);
