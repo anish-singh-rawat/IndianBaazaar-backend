@@ -63,7 +63,6 @@ export const requireAdmin = (
   res: Response,
   next: NextFunction,
 ) => {
-  console.log("req.user role:", req.user);
   if (!req.user) {
     return res.status(401).json({ error: "Authentication required" });
   }
